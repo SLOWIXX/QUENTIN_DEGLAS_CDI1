@@ -1,0 +1,17 @@
+{
+    "name": "qudeg/quentin_deglas_cdi1",
+    "autoload": {
+        "psr-4": {
+            "Qudeg\\QuentinDeglasCdi1\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "slowix",
+            "email": "qudeglas@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    }
+}
