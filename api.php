@@ -49,13 +49,4 @@ foreach ($data as $character) {
     $houses[$house][] = $character;
 }
 
-foreach ($houses as $house => $characters) {
-    echo "<h2>Maison : $house</h2>";
-    echo "<ul>";
-    foreach ($characters as $character) {
-        $name = $character['name'] ?? 'Nom inconnu';
-        echo "<li>$name</li>";
-    }
-    echo "</ul>";
-}
 

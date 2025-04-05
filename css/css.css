@@ -1,0 +1,334 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap");
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #2C2F33 ;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ul {
+  list-style: none;
+}
+.navigation {
+  display: flex;
+  justify-content: space-between;
+}
+#left-nav {
+  display: flex;
+  align-items: center;
+}
+#left-nav .liens {
+  margin-left: 5%;
+}
+#nav-logo {
+  width: 5rem;
+  height: 5rem;
+  margin-right: 20px;
+}
+.couleur_texte_entete {
+  color: #E4E6EB;
+  white-space: nowrap;
+  text-align: center;
+}
+#nav-img {
+  width: 4rem;
+  height: 4rem;
+}
+.liens a {
+  text-decoration: none;
+}
+.placement-jsp2, .placement-booster, .placement-mes-cartes, .placement-echanges {
+  margin-left: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#main-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.carte-container {
+    display : flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+.maison-container {
+    background-color: #d4af37; 
+    display: flex;
+    flex-direction: column;
+  
+
+}
+
+.carte {
+    margin: 20px;
+    padding: 10px;
+    background-color: rgb(128, 17, 17);
+    border-radius: 15px;
+}
+
+.carte-name {
+    display: flex;
+    justify-content: center;
+    /* color a ajouter */
+    font-size: 1.2rem;
+    margin-top : 10%;
+
+}
+
+  .carte-image {
+   width: 200px;
+    height: 250px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+
+ Footer 
+
+.footer {
+  background-color: #1a1a1a;
+  color: #f5deb3;
+  font-family: 'Times New Roman', serif;
+  padding: 20px;
+  text-align: center;
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-logo {
+  width: 80px;
+}
+
+.footer-slogan {
+  font-size: 16px;
+  font-style: italic;
+}
+
+.footer-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.footer-link {
+  color: #f5deb3;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.footer-quote {
+  max-width: 600px;
+  margin: 0 auto;
+  font-style: italic;
+  color: #d4af37;
+  font-size: 14px;
+}
+
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.social-icon {
+  width: 25px;
+  transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.1);
+}
+
+.footer-legal {
+  font-size: 14px;
+  color: #a9a9a9;
+}
+
+.legal-link {
+  color: #a9a9a9;
+  text-decoration: none;
+}
+
+.legal-link:hover {
+  text-decoration: underline;
+}
+
+
+
+
+
+  sidebar 
+.hamburger {
+  font-size: 30px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.sidebar {
+  width: 25%;
+  height: 100vh;
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s;
+}
+
+.sidebar.active {
+  transform: translateX(0);
+}
+
+.close-btn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: none;
+}
+
+.sidebar h2 {
+  text-transform: uppercase;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
+.sidebar.active .close-btn {
+  display: block;
+}
+
+.sidebar.active ~ .hamburger {
+  display: none;
+}
+
+h2 {
+  margin-top: 4rem;
+}
+
+.text {
+  margin-top: 5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#searchInput {
+  padding: 10px;
+  font-size: 1rem;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px
+}
+
+#searchButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin-left: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#searchButton:hover, #resetButton:hover {
+  background-color: #0056b3;
+} */
+
+
+
+
+
+
+
+
+
+
