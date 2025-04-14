@@ -45,25 +45,27 @@ include "./api.php";
               <h2><?= htmlspecialchars($house) ?></h2>
             </div>
             <ul class="carte-container">
-              <?php foreach ($characters as $character): ?>
-                <li class="carte" data-name="<?= htmlspecialchars(strtolower($character['name'])) ?>">
-                  <?php if (!empty($character['image'])): ?>
-                    <img src="<?= htmlspecialchars($character['image']) ?>" alt="Image de <?= htmlspecialchars($character['name']) ?>" class="carte-image" /><br />
-                  <?php endif; ?>
-                  <?php if (!empty($character['name'])): ?>
-                    <strong class="carte-name"><?= htmlspecialchars($character['name']) ?></strong><br />
-                  <?php endif; ?>
-                  <?php if (!empty($character['actor'])): ?>
-                    <strong class="carte-info">Acteur : <?= htmlspecialchars($character['actor']) ?></strong><br />
-                  <?php endif; ?>
-                  <?php if (!empty($character['house'])): ?>
-                    <strong class="carte-info">Maison : <?= htmlspecialchars($character['house']) ?></strong><br />
-                  <?php endif; ?>
-                  <?php if (!empty($character['dateOfBirth'])): ?>
-                    <strong class="carte-info">Date de naissance : <?= htmlspecialchars($character['dateOfBirth']) ?></strong><br />
-                  <?php endif; ?>
-                </li>
-              <?php endforeach; ?>
+            <?php foreach ($characters as $character): ?>
+  <li class="carte" data-name="<?= htmlspecialchars(strtolower($character['name'])) ?>">
+    <a href="cartes.php?name=<?= urlencode($character['name']) ?>" class="carte-link">
+      <?php if (!empty($character['image'])): ?>
+        <img src="<?= htmlspecialchars($character['image']) ?>" alt="Image de <?= htmlspecialchars($character['name']) ?>" class="carte-image" /><br />
+      <?php endif; ?>
+      <?php if (!empty($character['name'])): ?>
+        <strong class="carte-name"><?= htmlspecialchars($character['name']) ?></strong><br />
+      <?php endif; ?>
+      <?php if (!empty($character['actor'])): ?>
+        <strong class="carte-info">Acteur : <?= htmlspecialchars($character['actor']) ?></strong><br />
+      <?php endif; ?>
+      <?php if (!empty($character['house'])): ?>
+        <strong class="carte-info">Maison : <?= htmlspecialchars($character['house']) ?></strong><br />
+      <?php endif; ?>
+      <?php if (!empty($character['dateOfBirth'])): ?>
+        <strong class="carte-info">Date de naissance : <?= htmlspecialchars($character['dateOfBirth']) ?></strong><br />
+      <?php endif; ?>
+    </a>
+  </li>
+<?php endforeach; ?>
             </ul>
           </div>
         <?php endforeach; ?>

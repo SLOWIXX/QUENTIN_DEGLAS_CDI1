@@ -1,0 +1,101 @@
+body {
+    background-color: #000000d2;
+    font-family: 'arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;  
+}
+
+.page-cartes-container {
+    width: 90%;
+    height: 75%;
+    max-width: 1400px;
+    background-color: white;
+    padding: 60px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+
+#page-cartes-nom {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.page-cartes-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.page-cartes-image-container {
+    flex: 1;
+    margin-right: 30px;
+}
+
+#carte-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.page-cartes-image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+
+/* ----------------------- */
+
+
+.carte-nom {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .image-container {
+    flex: 1;
+    margin-right: 30px;
+  }
+  
+  .image-container img {
+    width: 27rem;
+    height: 27rem;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .details-container {
+    flex: 2;
+  }
+  
+  .details-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .details-container li {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+
+  .aligmement-caracteristiques {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
