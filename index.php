@@ -19,7 +19,7 @@ include "./api.php";
       <button class="close-btn" id="close-btn">&larr;</button>
       <h2 id="Menu">Options</h2>
       <ul>
-        <li><a href="#">Accueil</a></li>
+        <li><a href="register.php">Accueil</a></li>
         <li><a href="profil.html">Profil</a></li>
         <li><a href="booster.html">Bootser</a></li>
         <li><a href="trade.html">Échanges</a></li>
@@ -48,9 +48,31 @@ include "./api.php";
             <?php foreach ($characters as $character): ?>
   <li class="carte" data-name="<?= htmlspecialchars(strtolower($character['name'])) ?>">
     <a href="cartes.php?name=<?= urlencode($character['name']) ?>" class="carte-link">
-      <?php if (!empty($character['image'])): ?>
-        <img src="<?= htmlspecialchars($character['image']) ?>" alt="Image de <?= htmlspecialchars($character['name']) ?>" class="carte-image" /><br />
-      <?php endif; ?>
+
+
+
+     <?php 
+$imagePath = '';
+
+if (!empty($character['image'])) {
+    $imagePath = htmlspecialchars($character['image']);
+} else {
+    $filename = strtolower(str_replace(' ', '', $character['name'])) . '.png';
+    $localImagePath = 'img/' . $filename;
+    if (file_exists($localImagePath)) {
+        $imagePath = $localImagePath;
+    } else {
+        $imagePath = 'img/default.png';
+    }
+}
+?>
+<img src="<?= $imagePath ?>" alt="Image de <?= htmlspecialchars($character['name']) ?>" class="carte-image" /><br />
+
+
+
+
+
+
       <?php if (!empty($character['name'])): ?>
         <strong class="carte-name"><?= htmlspecialchars($character['name']) ?></strong><br />
       <?php endif; ?>
