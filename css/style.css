@@ -46,6 +46,31 @@ ul {
 
 
 
+.reset-container {
+  display: flex; /* Utilisation de Flexbox */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  height: 100vh; /* Facultatif : pour centrer dans toute la hauteur de la page */
+}
+
+.reset-btn {
+  padding: 12px 24px;
+  background-color: #007BFF !important; /* Forcer l'application de la couleur */
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.reset-btn:hover {
+  background-color: #0056b3 !important; /* Forcer la couleur au survol */
+  transform: scale(1.05);
+}
+
+
 
 
 
@@ -55,6 +80,7 @@ ul {
     color: #E4E6EB;
     text-align: center;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
 
@@ -131,8 +157,8 @@ ul {
     font-weight: bold;
     margin-left: 10%;
     margin-top: -10%;
-    
   }
+  
 
 
 

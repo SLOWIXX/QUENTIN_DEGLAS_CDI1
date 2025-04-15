@@ -20,7 +20,7 @@ include "./api.php";
       <h2 id="Menu">Options</h2>
       <ul>
         <li><a href="register.php">Accueil</a></li>
-        <li><a href="profil.html">Profil</a></li>
+        <li><a href="profil.php">Profil</a></li>
         <li><a href="booster.html">Bootser</a></li>
         <li><a href="trade.html">Échanges</a></li>
         <li><a href="deco.html">Déconnexion</a></li>
@@ -35,6 +35,10 @@ include "./api.php";
         <input type="text" id="searchInput" placeholder="Rechercher une carte par nom..." />
       </div>
     </header>
+
+    <div class="reset-container" style="display: none;">
+  <button id="resetButton" class="reset-btn">Afficher toutes les maisons</button>
+</div>
 
 
     <div class="main-container">
@@ -142,6 +146,7 @@ if (!empty($character['image'])) {
 
   <script src="js/sidebar.js"></script>
   <script src="js/script.js"></script>
+  <script src="js/filter.js"></script>
 </body>
 
 </html>
