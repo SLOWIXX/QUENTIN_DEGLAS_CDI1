@@ -21,14 +21,23 @@ Récupérer les données à afficher sur votre site depuis l'API en ligne corres
 Sur la homepage, l’ensemble des cartes classés par maison seront affichés. Seront présents la photo, le nom,la 
 maison et l’acteur de la carte.
 
+Lorsque vous écrivez votre adresse-mail dans l’interface de connexion, la stocker dans un localstorage. Au rechargement de la page, ou fermeture complete et réouverture de la page, utliser le localstorage pour remettre l’adresse-mail qui était en cours d’écriture dans l’input.
+
+ Votre site intégrera au moins 3 transitions et 2 keyframes qui ont de l’interêt dans l’experience utilisateur
+
+ Votre site sera entièrement responsive
+
+
+ Sur la page de collection, au dessus des cartes, afficher la liste des maisons. Au clic sur une maison, seuls les cartes associées 
+à la maison apparaitront. Des éléments de l’interface globale changeront de couleur selon la maison choisie (mettre à jour les 
+variables CSS pour faire ce changement). Un bouton permettra de remettre à 0 le filtre.
+
+Le site internet possèdera un système de connexion /inscription. On ne pourra pas accéder à l’application si nous ne sommes pas connecté.
+
 
 tache pas faite :
 
  Votre code source HTML sera valide au test du w3 https://validator.w3.org/#validate_by_input
-
- Votre site intégrera au moins 3 transitions et 2 keyframes qui ont de l’interêt dans l’experience utilisateur
-
-  Votre site sera entièrement responsive
 
 
  Votre CSS sera découpé par composant, et seront importés dans un CSS unique final
@@ -46,18 +55,6 @@ donner. Le modal pourra être refermé.
 Sur une carte, une icône cœursera presente pour l’ajouter aux favoris.Au clic dessus, changement de 
 couleur ou de remplissage pour ajouter/supprimer des favoris
 
-
-Sur la page de collection, au dessus des cartes, afficher la liste des maisons. Au clic sur une maison, seuls les cartes associées 
-à la maison apparaitront. Des éléments de l’interface globale changeront de couleur selon la maison choisie (mettre à jour les 
-variables CSS pour faire ce changement). Un bouton permettra de remettre à 0 le filtre.
-
-
-Lorsque vous écrivez votre adresse-mail dans l’interface de connexion, la stocker dans un localstorage. Au rechargement de la
- page, ou fermeture complete et réouverture de la page, utliser le localstorage pour remettre l’adresse-mail qui était en
- cours d’écriture dans l’input.
-
-Le site internet possèdera un système de connexion /inscription. On ne pourra pas accéder à l’application si 
-nous ne sommes pas connecté.
 
 
 Depuis la homepage, un bouton permettant de « déballer » un booster sera présent. Une ouverture correspond à 5 

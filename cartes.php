@@ -1,4 +1,14 @@
 <?php
+session_start();
+
+// Vérifie si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    // Redirige vers la page d'inscription/connexion
+    header("Location: register.php");
+    exit;
+}
+?>
+<?php
 $cardName = isset($_GET['name']) ? htmlspecialchars($_GET['name']) : 'Carte inconnue';
 
 // Initialisation des variables par défaut
@@ -13,17 +23,14 @@ $charisme = 0;
 $magie = 0;
 $backgroundStory = 'Aucune histoire disponible';
 
-// Inclure l'API qui récupère les données
-require 'api.php';  // On inclut le fichier api.php
-
+require 'api.php';
 // Recherche du personnage avec le nom fourni dans l'URL
 $characterFound = false;
 
-// On recherche le personnage dans les données récupérées
+// recherche le personnage dans les données récupérées
 foreach ($houses as $house => $characters) {
     foreach ($characters as $character) {
         if (strtolower($character['name']) === strtolower($cardName)) {
-            // On trouve le personnage
             $characterFound = true;
             $cardImage = !empty($character['image']) ? $character['image'] : $cardImage;
             $actor = !empty($character['actor']) ? $character['actor'] : $actor;
@@ -35,15 +42,14 @@ foreach ($houses as $house => $characters) {
             $charisme = isset($character['caracteristiques']['charisme']) ? $character['caracteristiques']['charisme'] : $charisme;
             $magie = isset($character['caracteristiques']['magie']) ? $character['caracteristiques']['magie'] : $magie;
             $backgroundStory = !empty($character['backgroundStory']) ? $character['backgroundStory'] : $backgroundStory;
-            break 2; // On sort des boucles dès qu'on a trouvé le personnage
+            break 2; 
         }
     }
 }
 
-// Si le personnage n'a pas été trouvé, on affiche un message d'erreur
 if (!$characterFound) {
     echo "Personnage non trouvé.";
-    exit; // On arrête l'exécution du code si le personnage n'est pas trouvé
+    exit; 
 }
 ?>
 <!DOCTYPE html>
@@ -53,10 +59,10 @@ if (!$characterFound) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Détails de la carte</title>
-  <link rel="stylesheet" href="./css/cartes.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body id="body-cartes">
   <div class="page-cartes-container">
     <h1 id="carte-nom"><?= $cardName ?></h1>
     <div class="content">

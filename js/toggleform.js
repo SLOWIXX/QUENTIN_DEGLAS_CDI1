@@ -1,39 +1,28 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const boutonRegister = document.getElementById("showRegisterForm");
-    const boutonLogin = document.getElementById("showLoginForm");
-  
-    // Initialisation : définir le bouton actif au chargement
-    boutonRegister.classList.add("active"); // Par défaut, "S'inscrire" est actif
-    boutonLogin.classList.remove("active");
-  
-    // Appliquer les styles initiaux
-    updateButtonStyles();
-  
-    // Ajouter les événements de clic
-    boutonRegister.addEventListener("click", function () {
-      boutonRegister.classList.add("active");
-      boutonLogin.classList.remove("active");
-      updateButtonStyles();
-    });
-  
-    boutonLogin.addEventListener("click", function () {
-      boutonLogin.classList.add("active");
-      boutonRegister.classList.remove("active");
-      updateButtonStyles();
-    });
-  
-    // Fonction pour mettre à jour les styles des boutons
-    function updateButtonStyles() {
-      if (boutonRegister.classList.contains("active")) {
-        boutonRegister.style.backgroundColor = "blue";
-        boutonRegister.style.color = "white";
-        boutonLogin.style.backgroundColor = "white";
-        boutonLogin.style.color = "black";
-      } else {
-        boutonLogin.style.backgroundColor = "blue";
-        boutonLogin.style.color = "white";
-        boutonRegister.style.backgroundColor = "white";
-        boutonRegister.style.color = "black";
-      }
-    }
+document.addEventListener("DOMContentLoaded", () => {
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+  const showRegisterFormButton = document.getElementById("showRegisterForm");
+  const showLoginFormButton = document.getElementById("showLoginForm");
+
+  // Par défaut, afficher le formulaire de connexion
+  loginForm.style.display = "block";
+  registerForm.style.display = "none";
+  showLoginFormButton.style.backgroundColor = "#1b5780";
+  showRegisterFormButton.style.backgroundColor = "white";
+
+  // Gestion du clic sur "S'inscrire"
+  showRegisterFormButton.addEventListener("click", () => {
+    registerForm.style.display = "block";
+    loginForm.style.display = "none";
+    showRegisterFormButton.style.backgroundColor = "#1b5780";
+    showLoginFormButton.style.backgroundColor = "white";
   });
+
+  // Gestion du clic sur "Se connecter"
+  showLoginFormButton.addEventListener("click", () => {
+    loginForm.style.display = "block";
+    registerForm.style.display = "none";
+    showLoginFormButton.style.backgroundColor = "#1b5780";
+    showRegisterFormButton.style.backgroundColor = "white";
+  });
+});
