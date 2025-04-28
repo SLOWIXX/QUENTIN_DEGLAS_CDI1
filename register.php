@@ -1,8 +1,5 @@
 <?php
 session_start();
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
 
 $errors = [
     'username' => '',
@@ -10,94 +7,108 @@ $errors = [
     'password' => '',
 ];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json'); // Indique que la réponse est au format JSON
+$host = '127.0.0.1';
+$dbname = 'compte';
+$user = 'root';
+$pass = '';
+$charset = 'utf8mb4';
 
-    // Connexion à la base de données
-    $dbFile = __DIR__ . '/database.sqlite';
-    $pdo = new PDO("sqlite:$dbFile");
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'errors' => ['db' => 'Erreur de connexion à la base de données.']]);
+    exit;
+}
 
-    $action = $_POST['action'] ?? '';
-    $csrfToken = $_POST['csrf_token'] ?? '';
+$action = $_POST["action"] ?? '';
 
-    if ($csrfToken !== $_SESSION['csrf_token']) {
-        echo json_encode(['success' => false, 'errors' => ['csrf' => 'Requête invalide.']]);
-        exit;
+if ($action === 'register') {
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    // Validation des champs
+    if (empty($username)) {
+        $errors['username'] = "Le nom d'utilisateur est requis.";
+    }
+    if (empty($email)) {
+        $errors['email'] = "L'email est requis.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = "L'email est invalide.";
+    }
+    if (empty($password)) {
+        $errors['password'] = "Le mot de passe est requis.";
     }
 
-    if ($action === 'register') {
-        $username = trim($_POST['username']);
-        $email = trim($_POST['email']);
-        $password = $_POST['password'];
-
-        // Validation des champs
-        if (empty($username)) {
-            $errors['username'] = "Le nom d'utilisateur est requis.";
+    // Vérification si l'email ou le nom d'utilisateur existe déjà
+    if (empty($errors['email']) && empty($errors['username'])) {
+        $stmt = $pdo->prepare("SELECT id FROM compte WHERE email = :email OR username = :username");
+        $stmt->execute(['email' => $email, 'username' => $username]);
+        if ($stmt->fetch()) {
+            $errors['email'] = "L'email ou le nom d'utilisateur est déjà utilisé.";
         }
-        if (empty($email)) {
-            $errors['email'] = "L'email est requis.";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors['email'] = "L'email est invalide.";
-        }
-        if (empty($password)) {
-            $errors['password'] = "Le mot de passe est requis.";
-        }
+    }
 
-        // Vérification si l'email ou le nom d'utilisateur existe déjà
-        if (empty($errors['email']) && empty($errors['username'])) {
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = :email OR username = :username");
-            $stmt->execute(['email' => $email, 'username' => $username]);
-            if ($stmt->fetch()) {
-                $errors['email'] = "L'email ou le nom d'utilisateur est déjà utilisé.";
-            }
-        }
+  // Si aucune erreur, inscription
+if (empty(array_filter($errors))) {
+  $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-        // Si aucune erreur, inscription
-        if (empty(array_filter($errors))) {
-            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash) VALUES (:username, :email, :password_hash)");
-            $stmt->execute(['username' => $username, 'email' => $email, 'password_hash' => $passwordHash]);
+  $stmt = $pdo->prepare("INSERT INTO compte (username, email, password_hash) VALUES (:username, :email, :password_hash)");
+  $stmt->execute([
+      'username' => $username,
+      'email' => $email,
+      'password_hash' => $passwordHash
+  ]);
 
+  $userId = $pdo->lastInsertId();
+
+  // Stocker les informations dans la session
+  $_SESSION['user_id'] = $userId;
+  $_SESSION['username'] = $username;
+  $_SESSION['email'] = $email;
+
+  echo json_encode(['success' => true]);
+  exit;
+} else {
+  echo json_encode(['success' => false, 'errors' => $errors]);
+  exit;
+}
+
+} elseif ($action === 'login') {
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    // Validation des champs
+    if (empty($email)) {
+        $errors['email'] = "L'email est requis.";
+    }
+    if (empty($password)) {
+        $errors['password'] = "Le mot de passe est requis.";
+    }
+
+    // Vérification des identifiants
+    if (empty($errors['email']) && empty($errors['password'])) {
+        $stmt = $pdo->prepare("SELECT id, username, password_hash FROM compte WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch();
+
+        if (!$user || !password_verify($password, $user['password_hash'])) {
+            $errors['email'] = "Email ou mot de passe incorrect.";
+        } else {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
             echo json_encode(['success' => true]);
             exit;
-        } else {
-            echo json_encode(['success' => false, 'errors' => $errors]);
-            exit;
         }
-    } elseif ($action === 'login') {
-        $email = trim($_POST['email']);
-        $password = $_POST['password'];
-
-        // Validation des champs
-        if (empty($email)) {
-            $errors['email'] = "L'email est requis.";
-        }
-        if (empty($password)) {
-            $errors['password'] = "Le mot de passe est requis.";
-        }
-
-        // Vérification des identifiants
-        if (empty($errors['email']) && empty($errors['password'])) {
-            $stmt = $pdo->prepare("SELECT id, username, password_hash FROM users WHERE email = :email");
-            $stmt->execute(['email' => $email]);
-            $user = $stmt->fetch();
-
-            if (!$user || !password_verify($password, $user['password_hash'])) {
-                $errors['email'] = "Email ou mot de passe incorrect.";
-            } else {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                echo json_encode(['success' => true]);
-                exit;
-            }
-        }
-
-        echo json_encode(['success' => false, 'errors' => $errors]);
-        exit;
     }
+
+    echo json_encode(['success' => false, 'errors' => $errors]);
+    exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -123,8 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
       <!-- Formulaire d'inscription -->
-      <form id="registerForm">
-        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+      <form id="registerForm" method="POST">
         <input type="hidden" name="action" value="register">
         <div class="formInput">
           <label for="usernameRegister">Nom d'utilisateur</label>
@@ -144,9 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" id="submitRegisterForm">S'inscrire</button>
       </form>
 
-      <!-- Formulaire de connexion -->
-      <form id="loginForm" style="display: none;">
-        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+      <form id="loginForm" style="display: none;" method="POST">
         <input type="hidden" name="action" value="login">
         <div class="formInput">
           <label for="mailLogin">E-mail</label>

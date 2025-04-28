@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <?php
 include "./api.php";
+include "./favoris.php";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -75,7 +76,7 @@ include "./api.php";
                   </a>
                   <!-- Icône de cœur -->
                   <div class="favoris">
-                    <button class="favoris-button" title="Ajouter aux favoris">❤️</button>
+                    <button class="favoris-button" data-name="<?= htmlspecialchars($character['name']) ?>" title="Ajouter aux favoris">❤️</button>
                   </div>
                 </li>
               <?php endforeach; ?>
@@ -129,6 +130,7 @@ include "./api.php";
   <script src="js/sidebar.js"></script>
   <script src="js/script.js"></script>
   <script src="js/filter.js"></script>
+  <script src="js/favoris.js"></script>
 </body>
 
 </html>
