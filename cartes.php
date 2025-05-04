@@ -3,9 +3,9 @@ session_start();
 
 // Vérifie si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    // Redirige vers la page d'inscription/connexion
-    header("Location: register.php");
-    exit;
+  // Redirige vers la page d'inscription/connexion
+  header("Location: register.php");
+  exit;
 }
 ?>
 <?php
@@ -29,27 +29,28 @@ $characterFound = false;
 
 // recherche le personnage dans les données récupérées
 foreach ($houses as $house => $characters) {
-    foreach ($characters as $character) {
-        if (strtolower($character['name']) === strtolower($cardName)) {
-            $characterFound = true;
-            $cardImage = !empty($character['image']) ? $character['image'] : $cardImage;
-            $actor = !empty($character['actor']) ? $character['actor'] : $actor;
-            $house = !empty($character['house']) ? $character['house'] : $house;
-            $rarete = !empty($character['rarete']) ? $character['rarete'] : $rarete;
-            $description = !empty($character['description']) ? $character['description'] : $description;
-            $force = isset($character['caracteristiques']['force']) ? $character['caracteristiques']['force'] : $force;
-            $intelligence = isset($character['caracteristiques']['intelligence']) ? $character['caracteristiques']['intelligence'] : $intelligence;
-            $charisme = isset($character['caracteristiques']['charisme']) ? $character['caracteristiques']['charisme'] : $charisme;
-            $magie = isset($character['caracteristiques']['magie']) ? $character['caracteristiques']['magie'] : $magie;
-            $backgroundStory = !empty($character['backgroundStory']) ? $character['backgroundStory'] : $backgroundStory;
-            break 2; 
-        }
+  foreach ($characters as $character) {
+    if (strtolower($character['name']) === strtolower($cardName)) {
+      $characterFound = true;
+      $imagePath = 'img/' . strtolower(str_replace(' ', '', $character['name'])) . '.png';
+      $cardImage = file_exists($imagePath) ? $imagePath : 'img/default.png';
+      $actor = !empty($character['actor']) ? $character['actor'] : $actor;
+      $house = !empty($character['house']) ? $character['house'] : $house;
+      $rarete = !empty($character['rarete']) ? $character['rarete'] : $rarete;
+      $description = !empty($character['description']) ? $character['description'] : $description;
+      $force = isset($character['caracteristiques']['force']) ? $character['caracteristiques']['force'] : $force;
+      $intelligence = isset($character['caracteristiques']['intelligence']) ? $character['caracteristiques']['intelligence'] : $intelligence;
+      $charisme = isset($character['caracteristiques']['charisme']) ? $character['caracteristiques']['charisme'] : $charisme;
+      $magie = isset($character['caracteristiques']['magie']) ? $character['caracteristiques']['magie'] : $magie;
+      $backgroundStory = !empty($character['backgroundStory']) ? $character['backgroundStory'] : $backgroundStory;
+      break 2;
     }
+  }
 }
 
 if (!$characterFound) {
-    echo "Personnage non trouvé.";
-    exit; 
+  echo "Personnage non trouvé.";
+  exit;
 }
 ?>
 <!DOCTYPE html>
@@ -63,6 +64,18 @@ if (!$characterFound) {
 </head>
 
 <body id="body-cartes">
+<button class="hamburger" id="hamburger">&#9776;</button>
+    <div class="sidebar" id="sidebar">
+      <button class="close-btn" id="close-btn">&larr;</button>
+      <h2 id="Menu">Options</h2>
+      <ul>
+        <li><a href="index.php">Accueil</a></li>
+        <li><a href="profil.php">Profil</a></li>
+        <li><a href="booster.php">Bootser</a></li>
+        <li><a href="trade.html">Échanges</a></li>
+        <li><a href="deco.php">Déconnexion</a></li>
+      </ul>
+    </div>
   <div class="page-cartes-container">
     <h1 id="carte-nom"><?= $cardName ?></h1>
     <div class="content">
@@ -77,7 +90,9 @@ if (!$characterFound) {
           <li id="carte-maison"><strong>Maison :</strong> <?= $house ?></li>
           <li id="carte-rarete"><strong>Rareté :</strong> <?= $rarete ?></li>
           <li id="carte-description"><strong>Description :</strong> <?= $description ?></li>
-          <li><h4>Caractéristiques : /100</h4></li>
+          <li>
+            <h4>Caractéristiques : /100</h4>
+          </li>
         </ul>
         <ul class="aligmement-caracteristiques">
           <li id="carte-caracteristiques-force"><strong>Force :</strong> <?= $force ?></li>
@@ -92,6 +107,7 @@ if (!$characterFound) {
 
     </div>
   </div>
+  <script src="js/sidebar.js"></script>
 </body>
 
 </html>

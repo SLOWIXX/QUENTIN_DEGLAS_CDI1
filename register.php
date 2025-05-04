@@ -133,7 +133,6 @@ if (empty(array_filter($errors))) {
         </button>
       </div>
 
-      <!-- Formulaire d'inscription -->
       <form id="registerForm" method="POST">
         <input type="hidden" name="action" value="register">
         <div class="formInput">

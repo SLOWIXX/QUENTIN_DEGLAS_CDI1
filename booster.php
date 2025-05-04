@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include 'api.php';
+
 // Vérifie si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header("Location: register.php");
@@ -107,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $canOpenBooster) {
         <button class="close-btn" id="close-btn">&larr;</button>
         <h2 id="Menu">Options</h2>
         <ul>
-            <li><a href="register.php">Accueil</a></li>
+            <li><a href="index.php">Accueil</a></li>
             <li><a href="profil.php">Profil</a></li>
             <li><a href="booster.php">Booster</a></li>
             <li><a href="trade.html">Échanges</a></li>
@@ -134,9 +136,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $canOpenBooster) {
                 <div class="carte-container">
                     <?php foreach ($cards as $card): ?>
                         <div class="carte">
-                            <img src="<?= htmlspecialchars($card['image'] ?? 'img/default.png') ?>" 
-                                 alt="Image de <?= htmlspecialchars($card['name']) ?>" 
-                                 class="carte-image" />
+                            <?php
+                            $imagePath = 'img/' . strtolower(str_replace(' ', '', $card['name'])) . '.png';
+                            ?>
+                            <img src="<?= htmlspecialchars($imagePath) ?>"
+                                 alt="Image de <?= htmlspecialchars($card['name']) ?>"
+                                class="carte-image" />
                             <strong class="carte-name"><?= htmlspecialchars($card['name']) ?></strong>
                         </div>
                     <?php endforeach; ?>

@@ -11,6 +11,13 @@ if (!file_exists($dataFile)) {
 }
 
 $jsonContent = file_get_contents($dataFile);
+$characters = json_decode($jsonContent, true);
+
+if ($characters === null) {
+    die("Erreur lors du décodage du fichier data.json.");
+}
+
+
 $allowedNames = json_decode($jsonContent, true);
 
 if ($allowedNames === null) {
@@ -30,18 +37,40 @@ if ($response->getStatusCode() !== 200) {
     die("Erreur lors de la récupération des données de l'API.");
 }
 
-$data = json_decode($response->getBody(), true);
+$apiData = json_decode($response->getBody(), true);
 
-if ($data === null) {
-    die("Erreur lors du décodage des données JSON.");
+if ($apiData === null) {
+    die("Erreur lors du décodage des données JSON de l'API.");
+}
+
+// Charger les données de data.json
+$dataFile = __DIR__ . '/data/data.json';
+if (!file_exists($dataFile)) {
+    die("Le fichier data.json est introuvable.");
+}
+
+$jsonContent = file_get_contents($dataFile);
+$dataJson = json_decode($jsonContent, true);
+
+if ($dataJson === null) {
+    die("Erreur lors du décodage du fichier data.json.");
+}
+
+// Associer les données de l'API avec celles de data.json
+$characters = [];
+foreach ($dataJson as $characterFromJson) {
+    foreach ($apiData as $characterFromApi) {
+        if (strtolower($characterFromJson['name']) === strtolower($characterFromApi['name'])) {
+            $characters[] = array_merge($characterFromJson, [
+                'actor' => $characterFromApi['actor'] ?? 'Inconnu'
+            ]);
+            break;
+        }
+    }
 }
 
 $houses = [];
-foreach ($data as $character) {
-    if (!in_array($character['name'], $allowedNames)) {
-        continue;
-    }
-
+foreach ($characters as $character) {
     $house = $character['house'] ?? 'Unknown';
     if (!isset($houses[$house])) {
         $houses[$house] = [];

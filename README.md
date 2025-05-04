@@ -34,11 +34,22 @@ variables CSS pour faire ce changement). Un bouton permettra de remettre à 0 le
 
 Le site internet possèdera un système de connexion /inscription. On ne pourra pas accéder à l’application si nous ne sommes pas connecté.
 
+ Sur la page profil, l’ensemble de VOS cartes. classés et affichés de la même manière que pour la homepage.
 
-tache pas faite :
 
- Votre code source HTML sera valide au test du w3 https://validator.w3.org/#validate_by_input
+Les cartes likées se retrouvent en haut de la liste des cartes possédées.
 
+ Sur une url /profil, qui correspond à la page de la personne connectée, afficher ses informations + cartes personnelles.
+ur : L'utilisateur n'est pas connecté.
+Depuis la homepage, un bouton permettant de « déballer » un booster sera présent. Une ouverture correspond à 5 
+cartes aléatoires ajoutées à votre collection. Une ouverture n’est disponible que toutes les 24h.
+
+Sur une carte, une icône cœursera presente pour l’ajouter aux favoris.Au clic dessus, changement de 
+couleur ou de remplissage pour ajouter/supprimer des favoris
+
+ En bas à droite de votre site, sera present un bouton flotant.Au clic dessus, une popup modal apparaitra et laissera 
+apparent un formulaire d’échange de cartes avec le choix de la personne et le choix de la carte que vous allez 
+donner. Le modal pourra être refermé.
 
  Votre CSS sera découpé par composant, et seront importés dans un CSS unique final
 
@@ -48,25 +59,18 @@ tache pas faite :
  Votre code source CSS sera valide au test du w3 https://jigsaw.w3.org/css-validator/#validate_by_input
 
 
- En bas à droite de votre site, sera present un bouton flotant.Au clic dessus, une popup modal apparaitra et laissera 
-apparent un formulaire d’échange de cartes avec le choix de la personne et le choix de la carte que vous allez 
-donner. Le modal pourra être refermé.
 
-Sur une carte, une icône cœursera presente pour l’ajouter aux favoris.Au clic dessus, changement de 
-couleur ou de remplissage pour ajouter/supprimer des favoris
+tache pas faite :
+
+ Votre code source HTML sera valide au test du w3 https://validator.w3.org/#validate_by_input
 
 
 
-Depuis la homepage, un bouton permettant de « déballer » un booster sera présent. Une ouverture correspond à 5 
-cartes aléatoires ajoutées à votre collection. Une ouverture n’est disponible que toutes les 24h.
 
 
- Sur la page profil, l’ensemble de VOS cartes. classés et affichés de la même manière que pour la homepage.
-
- Sur une url /profil, qui correspond à la page de la personne connectée, afficher ses informations + cartes personnelles.
 
 
-Les cartes likées se retrouvent en haut de la liste des cartes possédées.
+
 
 
 IOT 

@@ -1,15 +1,12 @@
 <?php
 session_start();
 
+include 'api.php'; 
 // Vérifie si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header("Location: register.php");
     exit;
 }
-
-// Récupération des informations de l'utilisateur depuis la session
-$username = $_SESSION['username'] ?? 'Utilisateur inconnu';
-$email = $_SESSION['email'] ?? 'Email inconnu';
 
 // Connexion à la base de données
 $host = '127.0.0.1';
@@ -22,13 +19,27 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Récupérer les favoris de l'utilisateur
+    $stmt = $pdo->prepare("SELECT username, email FROM compte WHERE id = :user_id");
+    $stmt->execute(['user_id' => $_SESSION['user_id']]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+        $username = $user['username'];
+        $email = $user['email'];
+    } else {
+        $username = 'Utilisateur inconnu';
+        $email = 'Email inconnu';
+    }
+
     $stmt = $pdo->prepare("SELECT character_name FROM favoris WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $_SESSION['user_id']]);
     $favoris = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données : " . htmlspecialchars($e->getMessage()));
 }
+$stmt = $pdo->prepare("SELECT card_name FROM user_cards WHERE user_id = :user_id");
+$stmt->execute(['user_id' => $_SESSION['user_id']]);
+$unlockedCards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
@@ -49,7 +60,7 @@ try {
     <button class="close-btn" id="close-btn">&larr;</button>
     <h2 id="Menu">Options</h2>
     <ul>
-      <li><a href="register.php">Accueil</a></li>
+    <li><a href="index.php">Accueil</a></li>
       <li><a href="profil.php">Profil</a></li>
       <li><a href="booster.php">Booster</a></li>
       <li><a href="trade.html">Échanges</a></li>
@@ -90,9 +101,30 @@ try {
         <?php endif; ?>
     </div>
 
-  <div class="titre-cartes">
-    <p>Cartes débloquées</p>
-  </div>
+    <div class="titre-cartes">
+    <h2>Cartes débloquées</h2>
+</div>
+
+<div class="main-container">
+    <?php if (!empty($unlockedCards)): ?>
+        <ul class="carte-container">
+            <?php foreach ($unlockedCards as $card): ?>
+                <li class="carte" data-name="<?= htmlspecialchars(strtolower($card['card_name'])) ?>">
+                    <a href="cartes.php?name=<?= urlencode($card['card_name']) ?>" class="carte-link">
+                        <?php
+                        $defaultImage = 'img/' . strtolower(str_replace(' ', '', $card['card_name'])) . '.png';
+                        ?>
+                        <img src="<?= $defaultImage ?>" alt="Image de <?= htmlspecialchars($card['card_name']) ?>"
+                            class="carte-image" /><br />
+                        <strong class="carte-name"><?= htmlspecialchars($card['card_name']) ?></strong><br />
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>Vous n'avez pas encore débloqué de cartes.</p>
+    <?php endif; ?>
+</div>
 
   <footer class="footer">
     <div class="footer-container">

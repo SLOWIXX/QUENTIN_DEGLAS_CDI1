@@ -1,10 +1,10 @@
 <?php
-session_start();
-
-// Vérification CSRF
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token'])) {
-    die("Requête invalide.");
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
+
+
+
 
 $host = '127.0.0.1'; // Adresse du serveur
 $dbname = 'compte'; // Nom de la base de données
@@ -45,6 +45,21 @@ try {
             character_name VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES compte(id)
+        )
+    ");
+
+    // Créer la table `exchange_requests` si elle n'existe pas
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS exchange_requests (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            sender_id INT NOT NULL,
+            receiver_id INT NOT NULL,
+            give_card VARCHAR(255) NOT NULL,
+            receive_card VARCHAR(255) NOT NULL,
+            message TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (sender_id) REFERENCES compte(id),
+            FOREIGN KEY (receiver_id) REFERENCES compte(id)
         )
     ");
 

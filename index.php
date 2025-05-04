@@ -1,11 +1,27 @@
 <?php
-session_start();
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // Vérifie si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-  // Redirige vers la page d'inscription/connexion
   header("Location: register.php");
   exit;
+}
+?>
+<?php
+// Connexion à la base de données MySQL
+$host = '127.0.0.1';
+$dbname = 'compte';
+$user = 'root';
+$pass = '';
+$charset = 'utf8mb4';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erreur de connexion à la base de données : " . htmlspecialchars($e->getMessage()));
 }
 ?>
 <?php
@@ -30,7 +46,7 @@ include "./favoris.php";
       <button class="close-btn" id="close-btn">&larr;</button>
       <h2 id="Menu">Options</h2>
       <ul>
-        <li><a href="register.php">Accueil</a></li>
+        <li><a href="index.php">Accueil</a></li>
         <li><a href="profil.php">Profil</a></li>
         <li><a href="booster.php">Bootser</a></li>
         <li><a href="trade.html">Échanges</a></li>
@@ -42,7 +58,7 @@ include "./favoris.php";
       <div class="site-title">
         <h2 class="text">CARTES DISPONIBLES</h2>
       </div>
-      <div class="search-container">
+      <div class="search-container">  
         <input type="text" id="searchInput" placeholder="Rechercher une carte par nom..." />
       </div>
     </header>
@@ -63,10 +79,13 @@ include "./favoris.php";
                 <li class="carte" data-name="<?= htmlspecialchars(strtolower($character['name'])) ?>">
                   <a href="cartes.php?name=<?= urlencode($character['name']) ?>" class="carte-link">
                     <?php
-                    $defaultImage = 'img/' . strtolower(str_replace(' ', '', $character['name'])) . '.png';
-                    $imagePath = !empty($character['image']) ? htmlspecialchars($character['image']) : $defaultImage;
+                    $imagePath = 'img/' . strtolower(str_replace(' ', '', $character['name'])) . '.png';
+                    if (!file_exists($imagePath)) {
+                      $imagePath = 'img/default.png';
+                    }
                     ?>
-                    <img src="<?= $imagePath ?>" alt="Image de <?= htmlspecialchars($character['name']) ?>"
+                    <img src="<?= htmlspecialchars($imagePath) ?>"
+                      alt="Image de <?= htmlspecialchars($character['name']) ?>"
                       class="carte-image" /><br />
                     <strong class="carte-name"><?= htmlspecialchars($character['name']) ?></strong><br />
                     <strong class="carte-info">Acteur :
@@ -84,53 +103,85 @@ include "./favoris.php";
           </div>
         <?php endforeach; ?>
       <?php else: ?>
-        <p>Impossible de récupérer les données de l'API.</p>
+        <p>Impossible de récupérer les données.</p>
       <?php endif; ?>
     </div>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-logo-slogan">
+          <img src="img/logo.webp" alt="Logo de Poudlard" class="footer-logo">
+          <p class="footer-slogan">"L'univers magique à portée de baguette"</p>
+        </div>
+        <div class="footer-navigation">
+          <a href="/" class="footer-link">Accueil</a>
+          <a href="/cartes" class="footer-link">Mes Cartes</a>
+          <a href="/echange" class="footer-link">Échanges</a>
+          <a href="/contact" class="footer-link">Contact</a>
+        </div>
+        <blockquote class="footer-quote">
+          "Happiness can be found, even in the darkest of times, if one only remembers to turn on the light." – Albus
+          Dumbledore
+        </blockquote>
+        <div class="footer-social">
+          <a href="https://www.linkedin.com/in/quentin-deglas-81699832b" class="social-link">
+            <img src="img/linkedin.png" alt="linkedin" class="social-icon">
+          </a>
+          <a href="https://www.instagram.com/quentin__dgls" class="social-link">
+            <img src="img/instagram.png" alt="Instagram" class="social-icon">
+          </a>
+          <a href="https://github.com/SLOWIXX" class="social-link">
+            <img src="img/github.png" alt="github" class="social-icon">
+          </a>
+          <a href="https://discord.gg/CaGXXD7tpV" class="social-link">
+            <img src="img/discord.png" alt="Discord" class="social-icon">
+          </a>
+        </div>
+        <div class="footer-legal">
+          <p>© 2025-2025 SLOWIXX Industries, LLC. All Rights Reserved.</p>
+          <a href="#" class="legal-link">Mentions légales</a> |
+          <a href="#" class="legal-link">Politique de confidentialité</a>
+        </div>
+      </div>
+    </footer>
+
+<!-- Bouton flottant -->
+<div id="floating-button" class="floating-button">
+  <button id="scroll-button" class="floating-btn">+</button>
+</div>
+
+<!-- Modale -->
+<div id="random-form-modal" class="modal">
+  <div class="modal-content">
+    <span id="close-modal" class="close-btn">&times;</span>
+    <h2>Échanger une carte</h2>
+    <form id="exchange-form" method="POST" action="echange.php">
+      <label for="user-select">Choisissez un utilisateur :</label>
+      <select id="user-select" name="user_id" required>
+        <option value="">Sélectionnez un utilisateur</option>
+        <?php
+        try {
+            $stmt = $pdo->prepare("SELECT id, username FROM compte WHERE id != :current_user_id");
+            $stmt->execute(['current_user_id' => $_SESSION['user_id']]);
+            while ($user = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo '<option value="' . htmlspecialchars($user['id']) . '">' . htmlspecialchars($user['username']) . '</option>';
+            }
+        } catch (PDOException $e) {
+            echo '<option value="">Erreur lors du chargement des utilisateurs : ' . htmlspecialchars($e->getMessage()) . '</option>';
+        }
+        ?>
+      </select>
+      <button type="submit" class="submit-btn">Suivant</button>
+    </form>
   </div>
+</div>
 
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-logo-slogan">
-        <img src="img/logo.webp" alt="Logo de Poudlard" class="footer-logo">
-        <p class="footer-slogan">"L'univers magique à portée de baguette"</p>
-      </div>
-      <div class="footer-navigation">
-        <a href="/" class="footer-link">Accueil</a>
-        <a href="/cartes" class="footer-link">Mes Cartes</a>
-        <a href="/echange" class="footer-link">Échanges</a>
-        <a href="/contact" class="footer-link">Contact</a>
-      </div>
-      <blockquote class="footer-quote">
-        "Happiness can be found, even in the darkest of times, if one only remembers to turn on the light." – Albus
-        Dumbledore
-      </blockquote>
-      <div class="footer-social">
-        <a href="https://www.linkedin.com/in/quentin-deglas-81699832b" class="social-link">
-          <img src="img/linkedin.png" alt="linkedin" class="social-icon">
-        </a>
-        <a href="https://www.instagram.com/quentin__dgls" class="social-link">
-          <img src="img/instagram.png" alt="Instagram" class="social-icon">
-        </a>
-        <a href="https://github.com/SLOWIXX" class="social-link">
-          <img src="img/github.png" alt="github" class="social-icon">
-        </a>
-        <a href="https://discord.gg/CaGXXD7tpV" class="social-link">
-          <img src="img/discord.png" alt="Discord" class="social-icon">
-        </a>
-      </div>
-      <div class="footer-legal">
-        <p>© 2025-2025 SLOWIXX Industries, LLC. All Rights Reserved.</p>
-        <a href="#" class="legal-link">Mentions légales</a> |
-        <a href="#" class="legal-link">Politique de confidentialité</a>
-      </div>
-    </div>
-  </footer>
+    <script src="js/sidebar.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/favoris.js"></script>
+    <script src="js/popup.js"></script>
 
-  <script src="js/sidebar.js"></script>
-  <script src="js/script.js"></script>
-  <script src="js/filter.js"></script>
-  <script src="js/favoris.js"></script>
 </body>
 
 </html>
