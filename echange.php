@@ -71,7 +71,7 @@ try {
         <h2>Proposer un échange</h2>
         <form id="exchange-form">
             <!-- Sélection de l'utilisateur -->
-            <label for="user-select">Choisissez un utilisateur :</label>
+            <label class="user-choix" for="user-select">Choisissez un utilisateur :</label>
             <select id="user-select" name="user_id" required>
                 <option value="">Sélectionnez un utilisateur</option>
                 <?php foreach ($users as $user): ?>
@@ -80,7 +80,7 @@ try {
             </select>
 
             <!-- Sélection de la carte à donner -->
-            <label for="give-card">Choisissez une carte à donner :</label>
+            <label class="user-choix" for="give-card">Choisissez une carte à donner :</label>
             <select id="give-card" name="give_card" required>
                 <option value="">Sélectionnez une carte</option>
                 <?php foreach ($loggedInUserCards as $card): ?>
@@ -89,13 +89,13 @@ try {
             </select>
 
             <!-- Sélection de la carte à recevoir -->
-            <label for="receive-card">Choisissez une carte à recevoir :</label>
+            <label class="user-choix" for="receive-card">Choisissez une carte à recevoir :</label>
             <select id="receive-card" name="receive_card" required>
                 <option value="">Sélectionnez une carte</option>
             </select>
 
             <!-- Message -->
-            <label for="message">Message :</label>
+            <label class="user-choix" for="message">Message :</label>
             <textarea id="message" name="message" rows="4" placeholder="Ajoutez un message pour l'autre utilisateur..."></textarea>
 
             <!-- Bouton de soumission -->

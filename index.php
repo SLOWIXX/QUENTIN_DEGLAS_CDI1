@@ -72,7 +72,7 @@ include "./favoris.php";
         <?php foreach ($houses as $house => $characters): ?>
           <div class="maison-container" id="house-<?= htmlspecialchars($house) ?>">
             <div class="house-title">
-              <h2><?= htmlspecialchars($house) ?></h2>
+              <h2 class="title-house"><?= htmlspecialchars($house) ?></h2>
             </div>
             <ul class="carte-container">
               <?php foreach ($characters as $character): ?>
@@ -156,7 +156,7 @@ include "./favoris.php";
     <span id="close-modal" class="close-btn">&times;</span>
     <h2>Échanger une carte</h2>
     <form id="exchange-form" method="POST" action="echange.php">
-      <label for="user-select">Choisissez un utilisateur :</label>
+      <label class="user-choix" for="user-select">Choisissez un utilisateur :</label>
       <select id="user-select" name="user_id" required>
         <option value="">Sélectionnez un utilisateur</option>
         <?php
