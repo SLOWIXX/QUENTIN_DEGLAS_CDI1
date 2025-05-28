@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si on reclique sur la même maison, on réaffiche tout
         houseContainers.forEach(container => container.style.display = 'block');
         currentVisible = null;
-        resetContainer.style.display = 'none'; // On masque le bouton
+        resetContainer.style.display = 'none'; 
       } else {
         // Sinon, on affiche uniquement la maison cliquée
         houseContainers.forEach(container => {
           container.style.display = (container.id === clickedHouseId) ? 'block' : 'none';
         });
         currentVisible = clickedHouseId;
-        resetContainer.style.display = 'block'; // On affiche le bouton
+        resetContainer.style.display = 'block'; 
       }
     });
   });
@@ -29,6 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
   resetButton.addEventListener('click', () => {
     houseContainers.forEach(container => container.style.display = 'block');
     currentVisible = null;
-    resetContainer.style.display = 'none'; // On cache le bouton après reset
+    resetContainer.style.display = 'none';
   });
 });

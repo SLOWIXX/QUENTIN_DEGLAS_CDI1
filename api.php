@@ -6,6 +6,7 @@ require 'vendor/autoload.php';
 use GuzzleHttp\Client;
 
 $dataFile = __DIR__ . '/data/data.json';
+// $dataFile = __DIR__ . '../data/data.json';
 if (!file_exists($dataFile)) {
     die("Le fichier data.json est introuvable.");
 }
@@ -43,7 +44,6 @@ if ($apiData === null) {
     die("Erreur lors du décodage des données JSON de l'API.");
 }
 
-// Charger les données de data.json
 $dataFile = __DIR__ . '/data/data.json';
 if (!file_exists($dataFile)) {
     die("Le fichier data.json est introuvable.");
@@ -56,7 +56,6 @@ if ($dataJson === null) {
     die("Erreur lors du décodage du fichier data.json.");
 }
 
-// Associer les données de l'API avec celles de data.json
 $characters = [];
 foreach ($dataJson as $characterFromJson) {
     foreach ($apiData as $characterFromApi) {

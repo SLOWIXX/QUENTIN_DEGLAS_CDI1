@@ -1,9 +1,11 @@
 <?php
 session_start();
+require_once "config/session.php";
 
-// Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
-    // Redirige vers la page d'inscription/connexion
+if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
+    session_unset();
+    session_destroy();
+
     header("Location: register.php");
     exit;
 }
@@ -19,28 +21,15 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body id="deco-body">
-<div class="deco-container">
-    <div class="deco-container-inte">
-        <p class="deco-title">Êtes-vous sûr de vouloir vous déconnecter ?</p>
-<form id="deco-form" class="deco-form" method="POST" action="deco.php">
-    <button type="submit" name="confirm" value="yes" class="deco-btn">Oui</button>
-    <button type="button" onclick="window.history.back();" class="deco-btn">Non</button>
-</form>
+    <div class="deco-container">
+        <div class="deco-container-inte">
+            <p class="deco-title">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+            <form id="deco-form" class="deco-form" method="POST" action="deco.php">
+                <button type="submit" name="confirm" value="yes" class="deco-btn">Oui</button>
+                <button type="button" onclick="window.history.back();" class="deco-btn">Non</button>
+            </form>
+        </div>
     </div>
-</div>
 </body>
 
 </html>
-
-<?php
-// Si l'utilisateur confirme la déconnexion
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
-    // Détruit la session
-    session_unset();
-    session_destroy();
-
-    // Redirige vers la page d'inscription/connexion
-    header("Location: register.php");
-    exit;
-}
-?>

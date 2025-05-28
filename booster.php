@@ -1,33 +1,11 @@
 <?php
-session_start();
 
 include 'api.php';
+require_once "config/session.php";
+require_once "config/db.php";
 
-// Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
-    header("Location: register.php");
-    exit;
-}
-
-// Connexion à la base de données MySQL
-$host = '127.0.0.1';
-$dbname = 'compte';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Erreur de connexion à la base de données : " . htmlspecialchars($e->getMessage()));
-}
-
-// Récupère l'utilisateur connecté
 $userId = $_SESSION['user_id'];
 
-// Vérifie si un booster peut être ouvert
 $stmt = $pdo->prepare("SELECT last_booster_opened FROM compte WHERE id = :user_id");
 $stmt->execute(['user_id' => $userId]);
 $user = $stmt->fetch();
@@ -38,13 +16,11 @@ if ($user && $user['last_booster_opened']) {
     $now = new DateTime();
     $interval = $now->diff($lastOpened);
 
-    // Vérifie si 24 heures se sont écoulées depuis la dernière ouverture
     if ($interval->h < 24 && $interval->d === 0) {
         $canOpenBooster = false;
     }
 }
 
-// Charger les cartes disponibles depuis data.json
 $dataFile = __DIR__ . '/data/data.json';
 if (!file_exists($dataFile)) {
     die("Le fichier data.json est introuvable.");
@@ -57,37 +33,30 @@ if ($availableCards === null) {
     die("Erreur lors du décodage du fichier data.json.");
 }
 
-// Si le booster est ouvert
 $cards = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $canOpenBooster) {
-    // Récupère les cartes déjà possédées par l'utilisateur
     $stmt = $pdo->prepare("SELECT card_name FROM user_cards WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $userId]);
     $ownedCards = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    // Filtrer les cartes disponibles pour exclure celles déjà possédées
     $filteredCards = array_filter($availableCards, function ($card) use ($ownedCards) {
         return !in_array($card['name'], $ownedCards);
     });
 
-    // Vérifie s'il reste suffisamment de cartes disponibles
     if (count($filteredCards) < 5) {
         die("Il n'y a pas assez de nouvelles cartes disponibles pour ouvrir un booster.");
     }
 
-    // Sélectionne 5 cartes aléatoires parmi les cartes non possédées
     $randomKeys = array_rand($filteredCards, 5);
     foreach ($randomKeys as $key) {
         $cards[] = $filteredCards[$key];
     }
 
-    // Ajoute les cartes à la collection de l'utilisateur
     $stmt = $pdo->prepare("INSERT INTO user_cards (user_id, card_name) VALUES (:user_id, :card_name)");
     foreach ($cards as $card) {
         $stmt->execute(['user_id' => $userId, 'card_name' => $card['name']]);
     }
 
-    // Met à jour la date de la dernière ouverture de booster
     $stmt = $pdo->prepare("UPDATE compte SET last_booster_opened = NOW() WHERE id = :user_id");
     $stmt->execute(['user_id' => $userId]);
 }

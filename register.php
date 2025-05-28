@@ -1,26 +1,7 @@
 <?php
 session_start();
 
-$errors = [
-    'username' => '',
-    'email' => '',
-    'password' => '',
-];
-
-$host = '127.0.0.1';
-$dbname = 'compte';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'errors' => ['db' => 'Erreur de connexion à la base de données.']]);
-    exit;
-}
+require_once "config/db.php";
 
 $action = $_POST["action"] ?? '';
 

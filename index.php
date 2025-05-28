@@ -1,31 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-// Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
-  header("Location: register.php");
-  exit;
-}
-?>
-<?php
-// Connexion à la base de données MySQL
-$host = '127.0.0.1';
-$dbname = 'compte';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Erreur de connexion à la base de données : " . htmlspecialchars($e->getMessage()));
-}
-?>
-<?php
-include "./api.php";
+require_once "config/session.php";
+require_once "config/db.php";
+include "api.php";
 include "./favoris.php";
 ?>
 <!DOCTYPE html>
@@ -58,8 +34,8 @@ include "./favoris.php";
       <div class="site-title">
         <h2 class="text">CARTES DISPONIBLES</h2>
       </div>
-      <div class="search-container">  
-        <input type="text" id="searchInput" placeholder="Rechercher une carte par nom..." />
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Rechercher une carte par nom ou acteur !" />
       </div>
     </header>
 
@@ -76,7 +52,9 @@ include "./favoris.php";
             </div>
             <ul class="carte-container">
               <?php foreach ($characters as $character): ?>
-                <li class="carte" data-name="<?= htmlspecialchars(strtolower($character['name'])) ?>">
+                <li class="carte"
+                  data-name="<?= htmlspecialchars(strtolower($character['name'])) ?>"
+                  data-actor="<?= htmlspecialchars(strtolower($character['actor'] ?? '')) ?>">
                   <a href="cartes.php?name=<?= urlencode($character['name']) ?>" class="carte-link">
                     <?php
                     $imagePath = 'img/' . strtolower(str_replace(' ', '', $character['name'])) . '.png';
@@ -145,42 +123,31 @@ include "./favoris.php";
       </div>
     </footer>
 
-<!-- Bouton flottant -->
-<div id="floating-button" class="floating-button">
-  <button id="scroll-button" class="floating-btn">+</button>
-</div>
+    <!-- Bouton flottant -->
+    <div id="floating-button" class="floating-button">
+      <button id="scroll-button" class="floating-btn">+</button>
+    </div>
 
-<!-- Modale -->
-<div id="random-form-modal" class="modal">
-  <div class="modal-content">
-    <span id="close-modal" class="close-btn">&times;</span>
-    <h2>Échanger une carte</h2>
-    <form id="exchange-form" method="POST" action="echange.php">
-      <label class="user-choix" for="user-select">Choisissez un utilisateur :</label>
-      <select id="user-select" name="user_id" required>
-        <option value="">Sélectionnez un utilisateur</option>
-        <?php
-        try {
-            $stmt = $pdo->prepare("SELECT id, username FROM compte WHERE id != :current_user_id");
-            $stmt->execute(['current_user_id' => $_SESSION['user_id']]);
-            while ($user = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                echo '<option value="' . htmlspecialchars($user['id']) . '">' . htmlspecialchars($user['username']) . '</option>';
-            }
-        } catch (PDOException $e) {
-            echo '<option value="">Erreur lors du chargement des utilisateurs : ' . htmlspecialchars($e->getMessage()) . '</option>';
-        }
-        ?>
-      </select>
+    <!-- Modale -->
+    <div id="random-form-modal" class="modal">
+      <div class="modal-content">
+        <span id="close-modal" class="close-btn">&times;</span>
+       <h2>Échanger une carte</h2>
+    <form id="exchange-form" method="POST" action="">
+      <label class="user-choix" for="user-email">Entrez l'email de l'utilisateur :</label>
+      <input type="email" id="user-email" name="user_email" required>
       <button type="submit" class="submit-btn">Suivant</button>
+      <div id="exchange-message" style="margin-top:10px;"></div>
     </form>
-  </div>
-</div>
+      </div>
+    </div>
 
     <script src="js/sidebar.js"></script>
     <script src="js/script.js"></script>
     <script src="js/filter.js"></script>
     <script src="js/favoris.js"></script>
     <script src="js/popup.js"></script>
+    <script src="js/modal.js"></script>
 
 </body>
 

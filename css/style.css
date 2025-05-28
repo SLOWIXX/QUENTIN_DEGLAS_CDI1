@@ -375,12 +375,15 @@ ul {
 .title-house {
   margin-top: 2rem;
   margin-bottom: 2rem;
-  font-size: 5rem;
+  font-size: 3rem;
 }
 
 .text {
   margin-top: 5rem;
   text-align: center;
+  font-size: 3.5rem;
+  color: #e4e6eb;
+  font-weight: bold;
   margin-bottom: 3rem;
 }
 
@@ -411,7 +414,6 @@ ul {
 
 #resetButton:hover {
   display: flex;
-margin-left: 0%;
 }
 #searchButton:hover,
 #resetButton:hover {
@@ -803,8 +805,8 @@ form {
 
 .info-profil {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 2rem;
+  margin-left: 2rem;
 }
 
 .titre-info-pseudo {
@@ -1034,6 +1036,20 @@ select {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+}
+
+#user-email {
+  padding: 8px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  width: 90%;
+  margin-bottom: 10px;
+  font-size: 1em;
+  transition: border-color 0.2s;
+}
+#user-email:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 form label {

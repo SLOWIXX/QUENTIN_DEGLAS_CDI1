@@ -1,17 +1,8 @@
 <?php
-session_start();
+require_once "config/session.php";
 
-// Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
-  // Redirige vers la page d'inscription/connexion
-  header("Location: register.php");
-  exit;
-}
-?>
-<?php
 $cardName = isset($_GET['name']) ? htmlspecialchars($_GET['name']) : 'Carte inconnue';
 
-// Initialisation des variables par défaut
 $cardImage = 'images/not-found.png';
 $actor = 'Inconnu';
 $house = 'Inconnue';
@@ -24,10 +15,8 @@ $magie = 0;
 $backgroundStory = 'Aucune histoire disponible';
 
 require 'api.php';
-// Recherche du personnage avec le nom fourni dans l'URL
 $characterFound = false;
 
-// recherche le personnage dans les données récupérées
 foreach ($houses as $house => $characters) {
   foreach ($characters as $character) {
     if (strtolower($character['name']) === strtolower($cardName)) {
