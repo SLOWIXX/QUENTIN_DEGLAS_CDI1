@@ -1,5 +1,6 @@
 <?php
-
+require_once "config/db.php";
+require_once "config/session.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $_SESSION['user_id'];
@@ -10,12 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
- require_once "config/db.php";
-
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset", $user, $pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         $stmt = $pdo->prepare("SELECT id FROM favoris WHERE user_id = :user_id AND character_name = :character_name");
         $stmt->execute(['user_id' => $userId, 'character_name' => $characterName]);
         $favori = $stmt->fetch();

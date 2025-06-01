@@ -17,21 +17,26 @@ $backgroundStory = 'Aucune histoire disponible';
 require 'api.php';
 $characterFound = false;
 
-foreach ($houses as $house => $characters) {
+foreach ($houses as $houseName => $characters) {
   foreach ($characters as $character) {
     if (strtolower($character['name']) === strtolower($cardName)) {
       $characterFound = true;
       $imagePath = 'img/' . strtolower(str_replace(' ', '', $character['name'])) . '.png';
-      $cardImage = file_exists($imagePath) ? $imagePath : 'img/default.png';
-      $actor = !empty($character['actor']) ? $character['actor'] : $actor;
-      $house = !empty($character['house']) ? $character['house'] : $house;
-      $rarete = !empty($character['rarete']) ? $character['rarete'] : $rarete;
-      $description = !empty($character['description']) ? $character['description'] : $description;
-      $force = isset($character['caracteristiques']['force']) ? $character['caracteristiques']['force'] : $force;
-      $intelligence = isset($character['caracteristiques']['intelligence']) ? $character['caracteristiques']['intelligence'] : $intelligence;
-      $charisme = isset($character['caracteristiques']['charisme']) ? $character['caracteristiques']['charisme'] : $charisme;
-      $magie = isset($character['caracteristiques']['magie']) ? $character['caracteristiques']['magie'] : $magie;
-      $backgroundStory = !empty($character['backgroundStory']) ? $character['backgroundStory'] : $backgroundStory;
+      $actor = $character['actor'] ?? 'Inconnu';
+      $alternate_names = !empty($character['alternate_names']) ? implode(', ', $character['alternate_names']) : 'Aucun';
+      $species = $character['species'] ?? 'Inconnu';
+      $gender = $character['gender'] ?? 'Inconnu';
+      $house = $character['house'] ?? 'Inconnue';
+      $dateOfBirth = $character['dateOfBirth'] ?? 'Inconnue';
+      $wand = isset($character['wand']) && is_array($character['wand'])
+        ? (
+            (!empty($character['wand']['wood']) ? $character['wand']['wood'] : '') .
+            (!empty($character['wand']['core']) ? ', ' . $character['wand']['core'] : '') .
+            (!empty($character['wand']['length']) ? ', ' . $character['wand']['length'] . ' pouces' : '')
+          )
+        : 'Inconnue';
+      $patronus = $character['patronus'] ?? 'Inconnu';
+      $alive = isset($character['alive']) ? ($character['alive'] ? 'Oui' : 'Non') : 'Inconnu';
       break 2;
     }
   }
@@ -70,27 +75,27 @@ if (!$characterFound) {
     <div class="content">
 
       <div class="image-container">
-        <img alt="Image de la carte" src="<?= $cardImage ?>">
+        <img alt="Image de la carte" src="<?= $imagePath ?>">
       </div>
 
       <div class="details-container">
         <ul>
           <li id="carte-acteur"><strong>Acteur :</strong> <?= $actor ?></li>
           <li id="carte-maison"><strong>Maison :</strong> <?= $house ?></li>
-          <li id="carte-rarete"><strong>Rareté :</strong> <?= $rarete ?></li>
-          <li id="carte-description"><strong>Description :</strong> <?= $description ?></li>
+          <li id="carte-rarete"><strong>Autres noms :</strong> <?= $alternate_names ?></li>
+          <li id="carte-description"><strong>Description :</strong> Espèce : <?= $species ?> | Genre : <?= $gender ?> | Né le : <?= $dateOfBirth ?></li>
           <li>
             <h4>Caractéristiques : /100</h4>
           </li>
         </ul>
         <ul class="aligmement-caracteristiques">
-          <li id="carte-caracteristiques-force"><strong>Force :</strong> <?= $force ?></li>
-          <li id="carte-caracteristiques-intelligence"><strong>Intelligence :</strong> <?= $intelligence ?></li>
-          <li id="carte-caracteristiques-charisme"><strong>Charisme :</strong> <?= $charisme ?></li>
-          <li id="carte-caracteristiques-magie"><strong>Magie :</strong> <?= $magie ?></li>
+          <li id="carte-caracteristiques-force"><strong>Baguette :</strong> <?= $wand ?></li>
+          <li id="carte-caracteristiques-intelligence"><strong>Patronus :</strong> <?= $patronus ?></li>
+          <li id="carte-caracteristiques-charisme"><strong>Vivant :</strong> <?= $alive ?></li>
+          <li id="carte-caracteristiques-magie"><strong></strong></li>
         </ul>
         <ul>
-          <li id="carte-backgroundStory"><strong>Histoire :</strong> <?= $backgroundStory ?></li>
+          <li id="carte-backgroundStory"><strong></strong></li>
         </ul>
       </div>
 
